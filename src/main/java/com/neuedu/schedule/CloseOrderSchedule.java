@@ -20,7 +20,7 @@ public class CloseOrderSchedule {
 
     //
     //@Scheduled(cron = "0 0 */1 * * *")
-    @Scheduled(cron = "* */5 * * * *")
+    @Scheduled(cron = "0 */1 * * * *")
     public void closeOrder(){
 
         //step1:
