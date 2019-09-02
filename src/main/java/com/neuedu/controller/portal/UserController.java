@@ -10,6 +10,7 @@ import com.neuedu.vo.UserDetailVO;
 import com.neuedu.vo.UserInfoVO;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,6 +22,7 @@ import javax.servlet.http.HttpSession;
 
 @RestController
 @RequestMapping(value = "/user/")
+@CrossOrigin
 public class UserController {
 
     @Autowired
@@ -98,7 +100,14 @@ public class UserController {
      *检查用户名或邮箱是否有效
      */
     @RequestMapping(value = "check_valid.do")
-    public ServerResponse check_valid(String str,String type){
+    public ServerResponse check_valid(HttpSession session,String str,String type){
+        UserInfo userInfo = (UserInfo) session.getAttribute(Const.CURRENT_USER);
+        if(type.equals("username")&&userInfo.getUsername().equals(str)){
+            return ServerResponse.createServerResponseBySucess("用户名可用！");
+        }
+        if(type.equals("email")&&userInfo.getEmail().equals(str)){
+            return ServerResponse.createServerResponseBySucess("该邮箱可注册！");
+        }
         ServerResponse serverResponse = userService.check_valid(str,type);
         return serverResponse;
     }
@@ -130,21 +139,44 @@ public class UserController {
      *登录状态下重置密码
      */
     @RequestMapping(value = "reset_password.do")
-    public ServerResponse reset_password(HttpSession session,String passwordOld,String passwordNew){
+    public ServerResponse reset_password(HttpSession session,String passwordOld,String passwordNew,HttpServletResponse response){
         UserInfo userInfo = (UserInfo) session.getAttribute(Const.CURRENT_USER);
 
-        return userService.reset_password(userInfo,passwordOld,passwordNew);
+        ServerResponse serverResponse = userService.reset_password(userInfo,passwordOld,passwordNew);
+        if(serverResponse.isSucess()){
+            UserInfo updateUserInfo = userService.findUserInfoById(userInfo.getId());
+            session.setAttribute(Const.CURRENT_USER,updateUserInfo);
+            Cookie username_cookie = new Cookie("username",updateUserInfo.getUsername());
+            Cookie password_cookie = new Cookie("password",updateUserInfo.getPassword());
+            username_cookie.setMaxAge(60*60*24*7);
+            password_cookie.setMaxAge(60*60*24*7);
+
+            response.addCookie(username_cookie);
+            response.addCookie(password_cookie);
+        }
+        return serverResponse;
     }
 
     /**
      *登录状态下更新个人信息
      */
     @RequestMapping(value = "update_information.do")
-    public ServerResponse update_information(HttpSession session,UserInfo user){
+    public ServerResponse update_information(HttpSession session,UserInfo user,HttpServletResponse response){
         UserInfo userInfo = (UserInfo) session.getAttribute(Const.CURRENT_USER);
-
         user.setId(userInfo.getId());
-        return userService.update_information(user);
+        ServerResponse serverResponse = userService.update_information(user);
+        if(serverResponse.isSucess()){
+            UserInfo updateUserInfo = userService.findUserInfoById(user.getId());
+            session.setAttribute(Const.CURRENT_USER,updateUserInfo);
+            Cookie username_cookie = new Cookie("username",updateUserInfo.getUsername());
+            Cookie password_cookie = new Cookie("password",updateUserInfo.getPassword());
+            username_cookie.setMaxAge(60*60*24*7);
+            password_cookie.setMaxAge(60*60*24*7);
+
+            response.addCookie(username_cookie);
+            response.addCookie(password_cookie);
+        }
+        return serverResponse;
     }
 
     /**

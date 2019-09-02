@@ -25,4 +25,9 @@ public interface ICategoryService {
      */
     public ServerResponse get_deep_category(Integer categoryId);
 
+    /**
+     * 获取商品类别数目
+     */
+    public ServerResponse get_category_count(Integer parentId);
+
 }

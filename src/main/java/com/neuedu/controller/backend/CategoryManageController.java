@@ -6,6 +6,7 @@ import com.neuedu.pojo.Category;
 import com.neuedu.pojo.UserInfo;
 import com.neuedu.service.ICategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -13,6 +14,7 @@ import javax.servlet.http.HttpSession;
 
 @RestController
 @RequestMapping(value = "/manage/category")
+@CrossOrigin
 public class CategoryManageController {
 
     @Autowired
@@ -54,5 +56,14 @@ public class CategoryManageController {
 
 
         return categoryService.get_deep_category(categoryId);
+    }
+
+    /**
+     * 获取当前分类id及递归子节点categoryId
+     */
+    @RequestMapping(value = "/get_category_count.do")
+    public ServerResponse get_category_count(HttpSession session,Integer parentId){
+
+        return categoryService.get_category_count(0);
     }
 }

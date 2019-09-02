@@ -7,6 +7,7 @@ import com.neuedu.pojo.UserInfo;
 import com.neuedu.service.IProductService;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -15,6 +16,7 @@ import javax.servlet.http.HttpSession;
 
 @RestController
 @RequestMapping(value = "/product")
+@CrossOrigin
 public class ProductController {
 
     @Autowired
@@ -28,8 +30,11 @@ public class ProductController {
                                  @RequestParam(name = "productId",required = false) Integer productId,
                                  @RequestParam(name = "is_new",required = false) Integer is_new ,
                                  @RequestParam(name = "is_hot",required = false) Integer is_hot ,
-                                 @RequestParam(name = "is_banner",required = false) Integer is_banner ){
-        return productService.udetail(productId,is_new,is_hot,is_banner);
+                                 @RequestParam(name = "is_banner",required = false) Integer is_banner ,
+                                 @RequestParam(name = "pageNum",required = false,defaultValue = "1")Integer pageNum,
+                                 @RequestParam(name = "pageSize",required = false,defaultValue = "10")Integer pageSize
+                                 ){
+        return productService.udetail(productId,is_new,is_hot,is_banner,pageNum,pageSize);
     }
 
     /**

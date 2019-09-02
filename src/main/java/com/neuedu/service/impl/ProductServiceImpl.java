@@ -231,7 +231,7 @@ public class ProductServiceImpl implements IProductService{
     }
 
     @Override
-    public ServerResponse udetail(Integer productId, Integer is_new, Integer is_hot, Integer is_banner) {
+    public ServerResponse udetail(Integer productId, Integer is_new, Integer is_hot, Integer is_banner,Integer pageNum,Integer pageSize) {
         if (productId!=null){
             Product product = productMapper.selectByPrimaryKey(productId);
             if (product==null){
@@ -243,6 +243,7 @@ public class ProductServiceImpl implements IProductService{
             ProductDetailVO productDetailVO = assembleProductDetailVO(product);
             return ServerResponse.createServerResponseBySucess(productDetailVO);
         }
+        PageHelper.startPage(pageNum,pageSize);
         List<Product> productList = productMapper.selectByMark(is_new,is_hot,is_banner);
         List<ProductDetailVO> productDetailVOList = Lists.newArrayList();
         if (productList!=null&&productList.size()>0){
@@ -251,7 +252,9 @@ public class ProductServiceImpl implements IProductService{
                 productDetailVOList.add(productDetailVO);
             }
         }
-        return ServerResponse.createServerResponseBySucess(productDetailVOList);
+        PageInfo pageInfo = new PageInfo(productList);
+        pageInfo.setList(productDetailVOList);
+        return ServerResponse.createServerResponseBySucess(pageInfo);
     }
     @Override
     public ServerResponse ulist(Integer categoryId, String keyword, Integer pageNum, Integer pageSize, String orderBy) {

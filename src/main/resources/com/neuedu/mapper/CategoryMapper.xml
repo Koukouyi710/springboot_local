@@ -99,4 +99,12 @@
   from neuedu_category
   where parent_id=#{categoryId}
   </select>
+
+  <!--查询类别数量 -->
+  <select id="countCategory" parameterType="int" resultMap="BaseResultMap">
+    select
+  id, parent_id, name, status, sort_order, create_time, update_time
+  from neuedu_category
+  where parent_id=#{parentId}
+  </select>
 </mapper>

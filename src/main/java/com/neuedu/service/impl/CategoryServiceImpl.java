@@ -98,6 +98,18 @@ public class CategoryServiceImpl implements ICategoryService{
         return ServerResponse.createServerResponseBySucess(integerSet);
     }
 
+    @Override
+    public ServerResponse get_category_count(Integer parentId) {
+        if (parentId==null){
+            return ServerResponse.createServerResponseByFail("父类别id不能为空！");
+        }
+        List<Category> categoryList = categoryMapper.countCategory(parentId);
+        if (categoryList==null&&categoryList.size()==0){
+            return ServerResponse.createServerResponseByFail("类别不存在");
+        }
+        return ServerResponse.createServerResponseBySucess(categoryList);
+    }
+
     private Set<Category> findAllChildCategory(Set<Category> categorySet,Integer categoryId){
         Category category = categoryMapper.selectByPrimaryKey(categoryId);
         if (category!=null){

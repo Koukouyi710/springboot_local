@@ -26,7 +26,8 @@ public class MySpringBootConfig implements WebMvcConfigurer{
 
         registry.addInterceptor(adminAuthroityInterceptor)
                 .addPathPatterns("/manage/**")
-                .excludePathPatterns("/manage/user/login.do");
+                .excludePathPatterns("/manage/user/login.do")
+                .excludePathPatterns("/manage/category/get_category_count.do");
         //前台拦截
         List<String> addPatterns = Lists.newArrayList();
         addPatterns.add("/user/**");
@@ -42,6 +43,7 @@ public class MySpringBootConfig implements WebMvcConfigurer{
         excludePathPaterns.add("/user/forget_reset_password.do");
         excludePathPaterns.add("/user/check_valid.do");
         excludePathPaterns.add("/order/alipay_callback.do");
+        excludePathPaterns.add("/manage/category/get_category_count.do");
 
         registry.addInterceptor(portalAuthorityInterceptor)
                 .addPathPatterns(addPatterns)

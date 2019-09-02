@@ -186,7 +186,7 @@ public class UserServiceImpl implements IUserService {
                 //用户存在
                 return ServerResponse.createServerResponseByFail("用户名已存在！");
             }else{
-                return ServerResponse.createServerResponseBySucess();
+                return ServerResponse.createServerResponseBySucess("用户名可用！");
             }
        }else if (type.equals("email")){
            int result = userInfoMapper.exsitsEmail(str);
@@ -194,7 +194,7 @@ public class UserServiceImpl implements IUserService {
                //邮箱存在
                return ServerResponse.createServerResponseByFail("该邮箱已注册！");
            }else{
-               return ServerResponse.createServerResponseBySucess();
+               return ServerResponse.createServerResponseBySucess("该邮箱可注册！");
            }
        }else{
            return ServerResponse.createServerResponseByFail("参数类型错误！");

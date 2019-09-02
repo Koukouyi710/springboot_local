@@ -58,4 +58,9 @@ public interface CategoryMapper {
      * 查询子类(平级)
      */
     List<Category>findChildCategory(Integer categoryId);
+
+    /**
+     * 查询子类(平级)
+     */
+    List<Category>countCategory(Integer parentId);
 }

@@ -44,7 +44,7 @@ public interface IProductService {
     /**
      *前台-商品详情
      */
-    public ServerResponse udetail(Integer productId,Integer is_new ,Integer is_hot ,Integer is_banner );
+    public ServerResponse udetail(Integer productId,Integer is_new ,Integer is_hot ,Integer is_banner,Integer pageNum,Integer pageSize);
 
     /**
      *前台-获取商品分类
